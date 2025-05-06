@@ -214,7 +214,8 @@ function populateTeacherTable(data, deletedEntries = []) {
 
       // Добавляем кнопку удаления
       const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Удалить";
+      deleteButton.textContent = "🗑 Удалить";
+      deleteButton.classList.add("delete-button"); // Добавляем класс!
       deleteButton.onclick = function () {
           deletedEntries.push(item);
           populateTeacherTable(data, deletedEntries);
@@ -346,7 +347,8 @@ function populateEditTeacherTable(data, selectedTeacher, deletedEntries = []) {
 
       // Add delete button
       const deleteButton = document.createElement("button");
-      deleteButton.textContent = "Удалить";
+      deleteButton.textContent = "🗑 Удалить";
+      deleteButton.classList.add("delete-button"); // Добавляем класс!
       deleteButton.onclick = function () {
           deletedEntries.push(item);
           populateEditTeacherTable(data, selectedTeacher, deletedEntries);
@@ -363,7 +365,8 @@ function populateEditTeacherTable(data, selectedTeacher, deletedEntries = []) {
 // Функция для добавления кнопки удаления в ячейку
 function addDeleteButton(cell, time, day, data, deletedEntries) {
   const deleteButton = document.createElement("button");
-  deleteButton.textContent = "Удалить";
+  deleteButton.textContent = "🗑";
+  deleteButton.classList.add("delete-button"); // Добавляем класс!
   deleteButton.style.float = "right";
 
   deleteButton.onclick = function (event) {
@@ -459,7 +462,8 @@ function populateGroupTable(data, selectedGroup, deletedEntries = []) {
 
           // Добавляем кнопку удаления
           const deleteButton = document.createElement("button");
-          deleteButton.textContent = "Удалить";
+          deleteButton.textContent = "🗑 Удалить";
+          deleteButton.classList.add("delete-button"); // Добавляем класс!
           deleteButton.onclick = function () {
               deletedEntries.push(item);
               populateGroupTable(data, selectedGroup, deletedEntries);
@@ -786,7 +790,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
               // Add delete button
               const deleteButton = document.createElement("button");
-              deleteButton.textContent = "Удалить";
+              deleteButton.textContent = "🗑 Удалить";
+              deleteButton.classList.add("delete-button"); // Добавляем класс!
               deleteButton.onclick = function () {
                   deletedEntries.push(item);
                   populateTeacherTable(data, deletedEntries);
@@ -850,52 +855,61 @@ const sidebar = document.getElementById('sidebar');
 const toggleBtn = document.getElementById('toggleSidebar');
 
 function updateSidebarState() {
-    if (window.innerWidth <= 700) {
+    if (window.outerWidth <= 700) {
         const isOpen = sidebar.classList.contains('open');
-        sidebar.style.transition = 'max-height 0.5s ease, opacity 0.5s ease';
+        // sidebar.style.transition = 'max-height 0.5s ease, opacity 0.5s ease';
         
         if (isOpen) {
             const height = sidebar.scrollHeight;
             sidebar.style.maxHeight = `${height}px`;
-            sidebar.style.opacity = '1';
+            // sidebar.style.opacity = '1';
+            // sidebar.style.display = '';
         } else {
             sidebar.style.maxHeight = '0';
-            sidebar.style.opacity = '0';
-            setTimeout(() => {
-                sidebar.style.removeProperty('transition');
-            }, 500);
+            // sidebar.style.opacity = '0';
+            // sidebar.style.display = 'none';
+            // setTimeout(() => {
+                // sidebar.style.removeProperty('transition');
+            // }, 500);
         }
     }
 }
 
 toggleBtn.addEventListener('click', () => {
-    if (window.innerWidth <= 700) {
+    // toggleBtn.classList.toggle('active');
+    // if (toggleBtn.classList.contains('active')) {
+        // sidebar.style.display="none";
+    // }
+    // else {
+        // sidebar.style.display="";
+    // }
+    if (window.outerWidth <= 700) {
         sidebar.classList.toggle('open');
         updateSidebarState();
         
         // Полное скрытие элементов после анимации
-        if (!sidebar.classList.contains('open')) {
-            setTimeout(() => {
-                sidebar.querySelectorAll('a').forEach(link => {
-                    link.style.display = 'none';
-                });
-            }, 500);
-        } else {
-            sidebar.querySelectorAll('a').forEach(link => {
-                link.style.display = 'flex';
-            });
-        }
+        // if (!sidebar.classList.contains('open')) {
+            // setTimeout(() => {
+                // sidebar.querySelectorAll('a').forEach(link => {
+                    // link.style.display = 'none';
+                // });
+            // }, 500);
+        // } else {
+            // sidebar.querySelectorAll('a').forEach(link => {
+                // link.style.display = 'flex';
+            // });
+        // }
     } else {
         sidebar.classList.toggle('collapsed');
     }
 });
 
 window.addEventListener('resize', () => {
-    if (window.innerWidth > 700) {
+    if (window.outerWidth > 700) {
         sidebar.classList.remove('open');
         sidebar.style.removeProperty('max-height');
-        sidebar.style.removeProperty('opacity');
-        sidebar.style.removeProperty('transition');
+        // sidebar.style.removeProperty('opacity');
+        // sidebar.style.removeProperty('transition');
         sidebar.querySelectorAll('a').forEach(link => {
             link.style.display = 'flex';
         });
@@ -903,3 +917,21 @@ window.addEventListener('resize', () => {
         sidebar.classList.remove('collapsed');
     }
 });
+
+function wrapTablesForMobile() {
+    if (window.innerWidth <= 700) {
+      document.querySelectorAll('table').forEach(table => {
+        if (!table.parentElement.classList.contains('scrollable-table-wrapper')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'scrollable-table-wrapper';
+          table.parentNode.insertBefore(wrapper, table);
+          wrapper.appendChild(table);
+        }
+      });
+    }
+  }
+  
+  window.addEventListener('DOMContentLoaded', wrapTablesForMobile);
+  window.addEventListener('resize', wrapTablesForMobile);
+
+  
